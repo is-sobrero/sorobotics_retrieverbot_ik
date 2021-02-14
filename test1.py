@@ -16,22 +16,33 @@ servo = ServoHandler(0x40)
 leg_bl = Leg(
     base_address=0x2e, 
     scale_factor=ServoHandler.TOWERPRO_SF,
-    shoulder_offset=-10
+    shoulder_offset=-10,
+    back_axis=True
 )
 
 leg_fl = Leg(
     base_address=0x3a,
-    shoulder_offset=10
+    shoulder_offset=5
 )
 
 leg_br = Leg(
     base_address=0x22,
     scale_factor=ServoHandler.TOWERPRO_SF,
     right_axis=True,
-    shoulder_offset=3
+    shoulder_offset=3,
+    back_axis=True
+)
+
+leg_fr = Leg(
+    base_address=0x16,
+    right_axis=True,
+    shoulder_offset=10
 )
 
 ik = IKSolver(servo)
+
+#ik.solve(leg_fl, 0, 0, 20)
+
 
 def seq(start, stop, step=1):
     n = int(round((stop - start)/float(step)))
@@ -43,17 +54,55 @@ def seq(start, stop, step=1):
         return([])
 
 delay_rate = .01
-for x in range(0,1):
+steps = 1
+for i in seq(15, 20, step=0.2):
+        ik.solve(leg_bl, 0, 0, i)
+        ik.solve(leg_fl, 0, 0, i)
+        ik.solve(leg_br, 0, 0, i)
+        ik.solve(leg_fr, 0, 0, i)
+        time.sleep(delay_rate)
+for x in range(0,steps):
     for i in seq(20, 10, step=-0.2):
         ik.solve(leg_bl, 0, 0, i)
         ik.solve(leg_fl, 0, 0, i)
         ik.solve(leg_br, 0, 0, i)
+        ik.solve(leg_fr, 0, 0, i)
         time.sleep(delay_rate)
     for i in seq(10, 20, step=0.2):
         ik.solve(leg_bl, 0, 0, i)
         ik.solve(leg_fl, 0, 0, i)
         ik.solve(leg_br, 0, 0, i)
+        ik.solve(leg_fr, 0, 0, i)
         time.sleep(delay_rate)
+
+for i in seq(20, 15, step=-0.2):
+        ik.solve(leg_bl, 0, 0, i)
+        ik.solve(leg_fl, 0, 0, i)
+        ik.solve(leg_br, 0, 0, i)
+        ik.solve(leg_fr, 0, 0, i)
+        time.sleep(delay_rate)
+
+for x in range(0,steps):
+    for i in seq(0, 5, step=0.2):
+        ik.solve(leg_bl, 0, i, 15)
+        ik.solve(leg_fl, 0, i, 15)
+        ik.solve(leg_br, 0, i, 15)
+        ik.solve(leg_fr, 0, i, 15)
+        time.sleep(delay_rate)
+    for i in seq(5, -5, step=-0.2):
+        ik.solve(leg_bl, 0, i, 15)
+        ik.solve(leg_fl, 0, i, 15)
+        ik.solve(leg_br, 0, i, 15)
+        ik.solve(leg_fr, 0, i, 15)
+        time.sleep(delay_rate)
+    for i in seq(-5, 0, step=0.2):
+        ik.solve(leg_bl, 0, i, 15)
+        ik.solve(leg_fl, 0, i, 15)
+        ik.solve(leg_br, 0, i, 15)
+        ik.solve(leg_fr, 0, i, 15)
+        time.sleep(delay_rate)
+
+
 '''
 for i in seq(0, 5, step=0.1):
         ik.solve(leg_bl, i, 0, 20)
@@ -71,4 +120,6 @@ for i in seq(-3, 0, step=0.1):
         ik.solve(leg_bl, i, 0, 20)
         ik.solve(leg_fl, i, 0, 20)
         ik.solve(leg_br, i, 0, 20)
-        time.sleep(delay_rate)'''
+        time.sleep(delay_rate)
+
+'''
