@@ -2,7 +2,6 @@
 # Use of this source code is governed by the GPL 3.0 license that can be
 # found in the LICENSE file.
 
-import smbus
 import time
 
 class ServoHandler:
@@ -14,11 +13,15 @@ class ServoHandler:
     DMG_SF = 1
 
     def __init__(self, board_address):
-        self.mb_address = board_address
-        self.bus = smbus.SMBus(1)
-        self.bus.write_byte_data(self.mb_address, 0xfe, 0x79)
-        self.bus.write_byte_data(self.mb_address, 0x00, 0x20)
-        time.sleep(.25)
+        try:
+            import smbus
+            self.mb_address = board_address
+            self.bus = smbus.SMBus(1)
+            self.bus.write_byte_data(self.mb_address, 0xfe, 0x79)
+            self.bus.write_byte_data(self.mb_address, 0x00, 0x20)
+            time.sleep(.25)
+        except ImportError:
+            print("SMBus cannot be imported, presuming you're running on a simulated environment, servo_handler has not been initialized")
     
     def write_channel(self, base_address, angle, scale_factor=1):
         prescaler = int(self.MIN_PRESCALER + (self.PRESCALER_STEP * angle * scale_factor))

@@ -3,10 +3,10 @@
 # found in the LICENSE file.
 
 import math
-from leg import Leg
-from servo_handler import ServoHandler
+from .leg import Leg
+from .servo_handler import ServoHandler
 
-class ServoDomainError(Exception, leg):
+class ServoDomainError(Exception, Leg):
     pass
 
 class IKSolver:
