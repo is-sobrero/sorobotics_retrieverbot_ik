@@ -14,7 +14,7 @@ class IKSolver:
     STD_SHIN_LEN = 14
     HIP_OFFSET = 5.5
 
-    def __init__(self, servo_handler, use_interpolator=False, simulated_environment=False):
+    def __init__(self, servo_handler=ServoHandler(0), use_interpolator=False, simulated_environment=False):
         if not type(servo_handler) is ServoHandler and not simulated_environment:
             raise Exception("Type of servo_handler must be ServoHandler")
         
